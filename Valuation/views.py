@@ -11,19 +11,36 @@ import datetime
 
 
 def index(request):
-    PE_PB = QIMAN.objects.filter(name="上证50").values_list('PE_PB', flat=True)
-    date = QIMAN.objects.filter(name="上证50").values_list('date', flat=True)
-    low = QIMAN.objects.filter(name='上证50').values('low').first()
-    high = QIMAN.objects.filter(name='上证50').values('high').first()
-    print(min)
+    name = request.GET.get('name', '上证50')
     format_date = []
+    sz50 = QIMAN.objects.filter(name=name)
+    names = QIMAN.objects.values('name').distinct().order_by('name')
+    PE_PB = sz50.values_list('PE_PB', flat=True)
+    date = sz50.values_list('date', flat=True)
+    low = sz50.values('low').first()
+    high = sz50.values('high').first()
+    color_list = sz50.values_list('color')
+    color = []
+    for i in color_list:
+        if i[0] == "LOW":
+            color.append("green")
+        elif i[0] == "HIGH":
+            color.append("red")
+        elif i[0] == "MID":
+            color.append("yellow")
+        else:
+            color.append("gray")
+    color.reverse()
     for i in date:
         format_date.append(i.strftime('%Y-%m-%d'))
     context = {
+        'name': names,
         'PE_PB': list(PE_PB),
         'date1': format_date,
         'high': high,
-        'low': low
+        'low': low,
+        'color': color,
+        'code': name
     }
     return render(request, 'Valuation/index.html', context)
 
@@ -49,6 +66,7 @@ class QiMan(object):
 
     def analysis(self):
         html = self.get_page_source()
+        date = html.find('.qm-header-note')[0].find('p')[0].text.split(" ")[0]
         for attr in self.attrs:
             for i in html.find(attr)[0].find('.flex-table-row'):
                 list = i.text.split('\n')[1:]
@@ -87,9 +105,7 @@ class QiMan(object):
             else:
                 percentile = float(i[1])
 
-            print(i)
             QIMAN.objects.update_or_create(
                 name=i[5], code=i[6], PE_PB=i[0], percentile=percentile, high=i[2], low=i[3],
-                roe=i[4],
-                color=color
+                roe=i[4], color=color, date=date
             )
