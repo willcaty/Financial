@@ -30,7 +30,6 @@ def index(request):
             color.append("yellow")
         else:
             color.append("gray")
-    color.reverse()
     for i in date:
         format_date.append(i.strftime('%Y-%m-%d'))
     context = {
@@ -58,7 +57,6 @@ class QiMan(object):
 
     def get_page_source(self):
         sysstr = platform.system()
-        print(sysstr)
         if sysstr == "Windows":
             browser = webdriver.PhantomJS()
         else:
