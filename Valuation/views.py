@@ -1,10 +1,10 @@
+import platform
+
 import requests_html
 from django.shortcuts import render
 from selenium import webdriver
 
 from .models import QIMAN
-
-import datetime
 
 
 # Create your views here.
@@ -57,7 +57,12 @@ class QiMan(object):
         self.list = []
 
     def get_page_source(self):
-        browser = webdriver.PhantomJS()
+        sysstr = platform.system()
+        print(sysstr)
+        if sysstr == "Windows":
+            browser = webdriver.PhantomJS()
+        else:
+            browser = webdriver.PhantomJS(executable_path="/opt/model/phantomjs/bin")
         browser.get(self.url)
         dom = browser.page_source
 
