@@ -62,7 +62,7 @@ class QiMan(object):
         if sysstr == "Windows":
             browser = webdriver.PhantomJS()
         else:
-            browser = webdriver.PhantomJS(executable_path="/opt/model/phantomjs/bin")
+            browser = webdriver.PhantomJS(executable_path="/opt/model/phantomjs/bin/phantomjs")
         browser.get(self.url)
         dom = browser.page_source
 
