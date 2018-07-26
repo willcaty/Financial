@@ -117,5 +117,5 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 CRONJOBS = [
-    ('*/1 * * * *', 'Valuation.QiManCron.my_job', '>>/opt/logs/financial/test.log')
+    ('00 23 * * *', 'Valuation.QiManCron.my_job', '>>/opt/logs/financial/test.log')
 ]
