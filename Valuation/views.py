@@ -1,6 +1,7 @@
 import platform
 
 import requests_html
+from django.db.models import Min, Max
 from django.shortcuts import render
 from selenium import webdriver
 
@@ -17,8 +18,11 @@ def index(request):
     names = QIMAN.objects.values('name').distinct().order_by('name')
     PE_PB = sz50.values_list('PE_PB', flat=True)
     date = sz50.values_list('date', flat=True)
-    low = sz50.values('low').first()
-    high = sz50.values('high').first()
+    low = sz50.values('low').annotate(Min('low'))[0]['low__min']
+    print(low)
+
+    high = sz50.values('high').annotate(Max('high'))[0]['high__max']
+    print(high)
     color_list = sz50.values_list('color')
     color = []
     for i in color_list:
