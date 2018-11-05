@@ -139,3 +139,24 @@ def Value_contrast(request):
         'dict':dict
         }
     return render(request, 'Valuation/contrast.html', context=context)
+
+
+def Percentile_contrast(request):
+    data = QIMAN.objects.all().order_by('-date', '-percentile')[0:27]
+
+    name = []
+    value = []
+    for i in data:
+        name.append(i.name)
+        value.append(i.percentile)
+    dict = {}
+    for i in range(27):
+        dict[name[i]]=value[i]
+
+    print(dict)
+    context = {
+        'name': name,
+        'value':value,
+        'dict':dict
+        }
+    return render(request, 'Valuation/percentile.html', context=context)

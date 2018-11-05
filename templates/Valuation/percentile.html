@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百分位横向对比</title>
+    {% load static %}
+    <script src="{% static 'Valuation/js/echarts.min.js' %}"></script>
+</head>
+<body>
+
+
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+
+<div id="main2" style="width: auto;height:400px;"></div>
+
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main2'));
+
+    // 指定图表的配置项和数据
+    var colorList = [
+        '#ff2600',
+        '#ffc000',
+        '#00ad4e',
+        '#0073c2',
+        '#165868',
+        '#e76f00',
+        '#316194',
+        '#723761',
+        '#00b2f1',
+        '#4d6022',
+        '#4b83bf',
+        '#f9c813',
+        '#0176c0',
+        '#ff2600',
+        '#ffc000',
+        '#00ad4e',
+        '#0073c2',
+        '#165868',
+        '#e76f00',
+        '#316194',
+        '#723761',
+        '#00b2f1',
+        '#4d6022',
+        '#4b83bf',
+        '#f9c813',
+        '#0176c0',
+        '#723761',
+    ];
+    var name = [{% for foo in name %}
+        '{{ foo }}',
+    {% endfor %}];
+    var value = [
+        {% for foo in value %}
+            {{ foo }},
+        {% endfor %}
+    ];
+    option = {
+        color: colorList,
+        legend: {
+            orient: 'vertical',
+            y: 'center',
+            right: '2%',
+            itemWidth: 12,
+            itemHeight: 12,
+            data: name,
+            textStyle: { //图例文字的样式
+                fontSize: 14
+            }
+        },
+        tooltip: {
+            show: true,
+            trigger: 'item',
+            formatter: "{c}"
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                mark: {
+                    show: true
+                },
+
+            }
+        },
+        grid: {
+            left: '2%',
+            right: '10%',
+            bottom: '3%',
+            height: '90%',
+            width: '80%',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'category',
+            axisLine: {
+                lineStyle: {
+                    type: 'solid',
+                    color: '#28316d', //左边线的颜色
+                    width: '1' //坐标线的宽度
+                }
+            },
+            axisLabel: {
+                interval: 0,
+                rotate: 40,
+                show: true,
+                splitNumber: 15,
+
+                textStyle: {
+                    //fontFamily: "微软雅黑",
+                    fontSize: 10,
+                },
+
+            },
+
+            data: [{% for foo in name %}
+                '{{ foo }}',
+            {% endfor %}],
+
+            axisTick: {
+
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value',
+            name: '',
+            splitLine: { //分割线
+                show: true,
+                // color:"#fff",
+                lineStyle: {
+                    color: '#28316d'
+                }
+            },
+            axisLabel: {
+                interval: 0,
+                rotate: 0,
+                show: true,
+                splitNumber: 30,
+                // color:"#fff",
+                textStyle: {
+                    //fontFamily: "微软雅黑",
+                    fontSize: 12,
+                }
+            },
+
+        },
+
+        ],
+        series:
+            [{
+                name: '',
+                type: 'bar',
+                barWidth: 30, //柱图宽度
+                data: value,
+                itemStyle: {
+                    normal: {
+                        color: function (params) {
+                            // build a color map as your need.
+                            var colorList = [
+                                '#ff2600',
+                                '#ffc000',
+                                '#00ad4e',
+                                '#0073c2',
+                                '#165868',
+                                '#e76f00',
+                                '#316194',
+                                '#723761',
+                                '#00b2f1',
+                                '#4d6022',
+                                '#4b83bf',
+                                '#f9c813',
+                                '#0176c0',
+                                '#ff2600',
+                                '#ffc000',
+                                '#00ad4e',
+                                '#0073c2',
+                                '#165868',
+                                '#e76f00',
+                                '#316194',
+                                '#723761',
+                                '#00b2f1',
+                                '#4d6022',
+                                '#4b83bf',
+                                '#f9c813',
+                                '#0176c0',
+                                '#723761',
+                            ];
+                            return colorList[params.dataIndex]
+                        },
+                        label: {
+                            show: false,
+                            position: 'top',
+                            formatter: '{c}%'
+                        }
+                    }
+                }
+            },
+
+                {% for name,value in dict.items %}
+                    {
+                        name: '{{ name }}',
+                        type: 'bar',
+                        stack: '',
+                        data: {{ value }}
+                    },
+                {% endfor %}
+
+
+
+            ]
+    }
+    ;
+    myChart.setOption(option);
+
+    // 使用刚指定的配置项和数据显示图表。
+</script>
+</body>
+</html>
