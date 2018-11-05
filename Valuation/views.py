@@ -2,6 +2,7 @@ import platform
 
 import requests_html
 from django.db.models import Min, Max
+from django.http import HttpResponse
 from django.shortcuts import render
 from selenium import webdriver
 
@@ -44,7 +45,7 @@ def index(request):
         'low': low,
         'color': color,
         'code': name
-    }
+        }
     return render(request, 'Valuation/index.html', context)
 
 
@@ -115,4 +116,26 @@ class QiMan(object):
             QIMAN.objects.update_or_create(
                 name=i[5], code=i[6], PE_PB=i[0], percentile=percentile, high=i[2], low=i[3],
                 roe=i[4], color=color, date=date
-            )
+                )
+
+
+def Value_contrast(request):
+    # 27
+    data = QIMAN.objects.all().order_by('-date', '-PE_PB')[0:27]
+
+    name = []
+    value = []
+    for i in data:
+        name.append(i.name)
+        value.append(i.PE_PB)
+    dict = {}
+    for i in range(27):
+        dict[name[i]]=value[i]
+
+    print(dict)
+    context = {
+        'name': name,
+        'value':value,
+        'dict':dict
+        }
+    return render(request, 'Valuation/contrast.html', context=context)
