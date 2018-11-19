@@ -47,12 +47,6 @@
         series: [{
             name: '{{ code }}',
             type: 'line',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'top'
-                }
-            },
             data: {{ PE_PB }},
         }]
     };
@@ -103,12 +97,6 @@
                             var colorList = {{ color|safe }};
                             return colorList[params.dataIndex]
                         }
-                    }
-                },
-                label: {
-                    normal: {
-                        show: true,
-                        position: 'top'
                     }
                 },
                 data: {{ PE_PB }}
